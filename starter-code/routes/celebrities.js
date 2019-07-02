@@ -40,6 +40,32 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.get("/edit/:id", (req, res) => {
+  Celebrity.findById(req.params.id)
+    .then(celebrity => {
+      res.render("celebrities/celebrity-edit", { celebrity });
+    })
+    .catch(err => {
+      console.log("Error getting the book:", err);
+    });
+});
+
+router.post("/edit/:id", (req, res) => {
+  const id = req.params.id;
+  const { name, occupation, catchPhrase } = req.body;
+  Celebrity.findByIdAndUpdate(req.params.id, {
+    name,
+    occupation,
+    catchPhrase
+  })
+    .then(() => {
+      res.redirect(`/`);
+    })
+    .catch(err => {
+      console.log("Error while updating Celebrity: ", err);
+    });
+});
+
 router.get("/:id/delete", (req, res) => {
   const id = req.params.id;
   Celebrity.findByIdAndDelete({ _id: id })
